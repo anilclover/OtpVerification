@@ -12,6 +12,7 @@ import Answers from '../components/Answers';
 import { Icon } from 'react-native-elements';
 import Questions from '../components/Questions';
 import { Question, getQuestions } from '../utils/api';
+import Dashboard from '../components/Dashboard';
 
 export type AnswerObject = {
   question: string;
@@ -26,6 +27,7 @@ const Quiz: FC = () => {
   const [useranswers, setuseranswers] = useState<AnswerObject[]>([]);
   const [score, setscore] = useState(0);
   const [gameover, setgameover] = useState(true);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   useEffect(() => {
     startQuiz();
@@ -34,6 +36,7 @@ const Quiz: FC = () => {
   const startQuiz = async () => {
     setloader(true);
     setgameover(false);
+    setQuizCompleted(false);
     const newquestions = await getQuestions();
     setquestions(newquestions);
     setscore(0);
@@ -56,6 +59,9 @@ const Quiz: FC = () => {
       setuseranswers(prev => {
         const updated = [...prev];
         updated[qIndex] = answerobject;
+        if (updated.filter(Boolean).length === questions.length) {
+          setQuizCompleted(true);
+        }
         return updated;
       });
     }
@@ -63,7 +69,13 @@ const Quiz: FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {!loader ? (
+      {quizCompleted ? (
+        <Dashboard
+          score={score}
+          userAnswers={useranswers}
+          restartQuiz={startQuiz}
+        />
+      ) : !loader ? (
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
           <View style={styles.header}>
             <Text style={styles.textstyle}>Total: {questions.length}</Text>
