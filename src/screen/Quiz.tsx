@@ -74,12 +74,16 @@ const Quiz: FC = () => {
           score={score}
           userAnswers={useranswers}
           restartQuiz={startQuiz}
+          totalQuestions={questions.length}
         />
       ) : !loader ? (
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
           <View style={styles.header}>
             <Text style={styles.textstyle}>Total: {questions.length}</Text>
             <Text style={styles.textstyle}>Score: {score}</Text>
+            <TouchableOpacity onPress={() => setQuizCompleted(true)}>
+              <Text style={styles.textstyle}>Finish</Text>
+            </TouchableOpacity>
           </View>
 
           {questions.map((q, index) => (
