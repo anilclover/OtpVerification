@@ -6,13 +6,18 @@ type Props = {
   score: number;
   userAnswers: AnswerObject[];
   restartQuiz: () => void;
+  totalQuestions: number;
 };
 
-const Dashboard: React.FC<Props> = ({ score, userAnswers, restartQuiz }) => {
+const Dashboard: React.FC<Props> = ({ score, userAnswers, restartQuiz, totalQuestions }) => {
+  const attemptedQuestions = userAnswers.filter(Boolean).length;
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Quiz Completed!</Text>
       <Text style={styles.scoreText}>Your Score: {score}</Text>
+      <Text style={styles.scoreText}>
+        Attempted: {attemptedQuestions} / {totalQuestions}
+      </Text>
 
       <Text style={styles.summaryTitle}>Answer Summary</Text>
       {userAnswers.map((answer, index) => (
