@@ -6,14 +6,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Button,
 } from 'react-native';
 import OtpVerificationScreen from './OtpVerificationScreen';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { decrement, increment, reset } from '../redux/slice/CounterSlice';
+import { RootState } from '../redux/store/Store';
 interface LoginProps {
   onLogin: () => void;
 }
-
+// https://vegease.in/
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
+  const count = useSelector((state: RootState) => state.counter.value);
+  const dispatch = useDispatch();
   const [mobile, setMobile] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
 
@@ -27,17 +33,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   if (isOtpSent) {
-    return (
-      <OtpVerificationScreen
-        mobile={mobile}
-        onVerified={onLogin}
-      />
-    );
+    return <OtpVerificationScreen mobile={mobile} onVerified={onLogin} />;
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Quiz App Login</Text>
+      <Text style={styles.title}> {count}</Text>
 
       <TextInput
         style={styles.input}
@@ -48,16 +50,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         maxLength={10}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={sendOtp}
-      >
-        <Text style={styles.buttonText}>Send OTP</Text>
+      <TouchableOpacity style={styles.button} onPress={sendOtp}>
+        <Text style={styles.buttonText}>Send OTP {'  '}👈</Text>
       </TouchableOpacity>
-
+      {/* <View style={styles.view}></View>
+      <Button title="Increment" onPress={() => dispatch(increment())} />
+      <View style={styles.view}></View>
+      <Button title="Decrement" onPress={() => dispatch(decrement())} />
+      <View style={styles.view}></View>
+      <Button title="ReSet" onPress={() => dispatch(reset())} />
       <TouchableOpacity onPress={() => {}}>
         <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -103,6 +107,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: '#007AFF',
     fontSize: 16,
+  },
+  view: {
+    justifyContent: 'center',
+    margin: 20,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
 });
 
